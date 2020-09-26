@@ -8,3 +8,55 @@ GAME RULES:
 - The first player to reach 100 points on GLOBAL score wins the game
 
 */
+
+var scores = [0,0];
+var roundScore = 0;
+var activePlayer = 0;
+
+HideDice();
+SetRoundScore(0, 0);
+SetRoundScore(1, 0);
+SetScore(0, 0);
+SetScore(1, 0);
+
+document.querySelector(".btn-roll").addEventListener("click", function() {
+    var diceValue = Math.ceil(Math.random() * 6);
+    var diceDOM = document.querySelector(".dice");
+    diceDOM.style.display = "block";
+    diceDOM.src = `dice-${diceValue}.png`;
+
+    if (diceValue > 1) {
+        roundScore += diceValue;
+        SetRoundScore(activePlayer, roundScore);
+    } else {
+        roundScore = 0;
+        EndRound();
+    }
+});
+
+document.querySelector(".btn-hold").addEventListener("click", function() {
+    EndRound();
+});
+
+function HideDice() {
+    document.querySelector(".dice").style.display = "none";
+}
+
+function EndRound() {
+    scores[activePlayer] += roundScore;
+    SetScore(activePlayer, scores[activePlayer]);
+    SetRoundScore(activePlayer, 0);
+    roundScore = 0;
+    document.querySelector(`.player-${activePlayer}-panel`).classList.remove("active");
+    activePlayer = activePlayer === 0 ? 1 : 0;
+    document.querySelector(`.player-${activePlayer}-panel`).classList.add("active");
+    HideDice();
+}
+
+function SetScore(player, score) {
+    document.getElementById(`score-${player}`).textContent = score;
+}
+
+function SetRoundScore(player, score) {
+    document.getElementById(`current-${player}`).textContent = score;
+}
