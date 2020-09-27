@@ -48,8 +48,14 @@ function EndRound() {
     SetRoundScore(activePlayer, 0);
     roundScore = 0;
     document.querySelector(`.player-${activePlayer}-panel`).classList.remove("active");
-    activePlayer = activePlayer === 0 ? 1 : 0;
-    document.querySelector(`.player-${activePlayer}-panel`).classList.add("active");
+    
+    if (scores[activePlayer] < 100) {
+        activePlayer = activePlayer === 0 ? 1 : 0;
+        document.querySelector(`.player-${activePlayer}-panel`).classList.add("active");
+    } else {
+        EndGame();
+    }
+
     HideDice();
 }
 
@@ -59,4 +65,11 @@ function SetScore(player, score) {
 
 function SetRoundScore(player, score) {
     document.getElementById(`current-${player}`).textContent = score;
+}
+
+function EndGame() {
+    document.getElementById(`name-${activePlayer}`).textContent = "Winner!";
+    document.querySelector(`.player-${activePlayer}-panel`).classList.add("winner");
+    document.querySelector(`.player-${activePlayer}-panel`).classList.remove("active");
+    HideDice();
 }
